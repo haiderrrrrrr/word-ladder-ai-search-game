@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Rules</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/game_rules.css') }}"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <button class="back-btn" onclick="location.href='/game'">&#8592; Back</button>
+    <div class="container">
+      <h2>Game Rules</h2>
+      <p>
+        Transform the start word into the target word by changing one letter at
+        a time. Every intermediate word must be valid for the selected
+        difficulty level.
+      </p>
+
+      <div class="rules-section">
+        <div class="rule-heading">Difficulty Levels</div>
+        <p>
+          <b>Beginner Mode:</b> Uses 3-letter words and simpler transformations.
+        </p>
+        <p>
+          <b>Advanced Mode:</b> Uses 5-letter words and requires longer
+          transformations.
+        </p>
+        <p>
+          <b>Challenge Mode:</b> Uses longer words, limited moves, and stricter
+          scoring.
+        </p>
+      </div>
+
+      <div class="rules-section">
+        <div class="rule-heading">How To Play</div>
+        <p>1. Choose a difficulty level.</p>
+        <p>2. Change exactly one letter from the current word.</p>
+        <p>3. Submit only valid words from the dictionary.</p>
+        <p>4. Reach the target word before your score or moves run out.</p>
+      </div>
+    </div>
+  </body>
+</html>

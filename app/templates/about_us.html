@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Game</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/about.css') }}"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <button class="back-btn" onclick="location.href='/game'">&#8592; Back</button>
+    <div class="container">
+      <h2>About Game</h2>
+      <p>
+        Word Ladder Adventure is a browser-based word transformation game. The
+        player starts with one word and reaches a target word by changing one
+        letter at a time.
+      </p>
+      <p>
+        The app uses classic AI search algorithms to generate hints and show
+        possible transformation paths. BFS, UCS, and A* help players compare
+        different search strategies while playing.
+      </p>
+      <p>
+        The goal is to make search concepts easier to understand through a
+        playable puzzle instead of only reading algorithm theory.
+      </p>
+    </div>
+  </body>
+</html>

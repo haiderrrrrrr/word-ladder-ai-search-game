@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Word Ladder Adventure - Expert Mode</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/expertStyle.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+  </head>
+  <body>
+    <!-- Inline Messages (Moved outside game-container) -->
+    {% if error_message %}
+    <div class="message error">
+      <span> {{ error_message }}</span>
+      <span class="close-btn" onclick="this.parentElement.style.display='none';">x</span>
+    </div>
+    {% endif %}
+    {% if success_message %}
+    <div class="message success">
+      <span> {{ success_message }}</span>
+      <span class="close-btn" onclick="this.parentElement.style.display='none';">x</span>
+    </div>
+    {% endif %}
+
+    <!-- Fixed nav buttons -->
+    <button class="back-btn" onclick="location.href='/start_game'">&#8592; Back</button>
+    <button class="new-game-btn" onclick="window.location.href='/new_game?mode=expert'">New Game</button>
+
+    <div class="game-container">
+      <h1>Word Ladder Adventure — Expert Mode</h1>
+      
+      <!-- Score and Moves -->
+      <div class="score-container">
+        <div class="score"> Score: {{ score }}</div>
+      </div>
+
+      <!-- Ladder with Start and End Words -->
+      <div id="ladder" class="ladder-container">
+        <div class="word-row">
+          <div class="word-box start-word">{{ start_word }}</div>
+          <span>-></span>
+          <div class="word-box end-word last-word">{{ end_word }}</div>
+        </div>
+        <!-- Input Box -->
+        <div class="word-input-box">
+          <form method="POST" action="/expert_mode">
+            <input type="hidden" name="start_word" value="{{ start_word }}" />
+            <input type="hidden" name="end_word" value="{{ end_word }}" />
+            <input
+              type="text"
+              name="user_input"
+              class="word-input"
+              maxlength="5"
+              placeholder="Enter word"
+              required
+            />
+            <button type="submit" class="submit-btn"> Submit</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Refresh Icon -->
+      <div class="refresh-icon" onclick="refreshWords()">
+        <i class="fas fa-sync-alt"></i> 
+      </div>
+
+      <!-- AI Assistance Sidebar -->
+      <div class="ai-sidebar">
+        <p style="font-size: 20px; font-weight: bold; color: #ffc107; display: flex; align-items: center; gap: 1px;">
+           AI Powered Hint System
+      </p>
+      
+        <button onclick="showAIHint('UCS')"> UCS</button>
+        <button onclick="showAIHint('BFS')"> BFS</button>
+        <button onclick="showAIHint('A*')"> A*</button>
+      </div>
+
+      <!-- Roadmap Container -->
+      <div id="roadmap-container" class="roadmap-container">
+        <h3 style="font-size: 26px; font-weight: bold; color: #ffc107;  align-items: center; gap: 8px;">
+           Transformation Roadmap
+      </h3>
+      <p id="roadmap" style="font-size: 18px; font-style: italic; color: #4CAF50; padding: 10px 15px; border-left: 4px solid #4CAF50; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);">
+         Your roadmap to success starts here!
+    </p>
+    
+      </div>
+
+      <!-- Visualize Graph Button -->
+      <button id="visualize-btn" onclick="visualizeGraph()"> Visualize Graph</button>
+    </div>
+
+    <!-- Graph Modal -->
+    <div id="graphModal" class="graph-modal">
+      <div class="graph-modal-content">
+        <button class="graph-modal-close" onclick="closeGraphModal()">&#x2715;</button>
+        <div class="graph-modal-scroll">
+          <p class="graph-modal-hint">Pinch or double-tap to zoom &nbsp;·&nbsp; Scroll to pan</p>
+          <img id="graphImage" src="" alt="Graph Visualization" class="graph-modal-img" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Modal -->
+    {% if success_message %}
+    <div id="successModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="document.getElementById('successModal').style.display='none'">&times;</span>
+        <h2> Congratulations!</h2>
+        <p>{{ success_message }}</p>
+        <p> Your score: {{ score }}</p>
+        <button class="new-game-btn" style="position:static;width:auto;" onclick="window.location.href='/new_game?mode=expert'">Play Again</button>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Game Over Modal -->
+    {% if moves <= 0 %}
+    <div id="gameOverModal" class="modal">
+      <div class="modal-content">
+        <h2> Game Over!</h2>
+        <p>You have run out of moves!</p>
+        <button class="new-game-btn game-over-btn" style="position:static;width:auto;" onclick="window.location.href='/new_game?mode=expert'">Try Again</button>
+      </div>
+    </div>
+    {% endif %}
+
+    <script>
+      let selectedAlgorithm = 'BFS'; // default
+
+      // Refresh words function
+      function refreshWords() {
+        $.get("/refresh_words", { mode: 'expert' }, function (data) {
+          document.querySelector(".start-word").innerText = data.start_word;
+          document.querySelector(".end-word").innerText = data.end_word;
+        });
+      }
+
+      // AI Hint function
+      function showAIHint(algorithm) {
+        selectedAlgorithm = algorithm;
+        const startWord = document.querySelector(".start-word").innerText;
+        const endWord = document.querySelector(".end-word").innerText;
+        $.get(
+          "/ai_hint/" + algorithm,
+          { start_word: startWord, end_word: endWord, mode: "expert" },
+          function (data) {
+            const roadmapContainer = document.getElementById("roadmap");
+            if (data.hint) {
+              roadmapContainer.innerHTML =
+                "The shortest transformation sequence using " +
+                algorithm +
+                ": <br>" +
+                data.hint.join("  ");
+            } else {
+              roadmapContainer.innerHTML = "Error: " + data.error;
+            }
+          }
+        );
+      }
+
+      // Function to visualize the graph
+      function visualizeGraph() {
+        $.get("/generate_graph", { algorithm: selectedAlgorithm, mode: "expert" }, function (data) {
+          if (data.graph_url) {
+            document.getElementById("graphImage").src = data.graph_url;
+            document.getElementById("graphModal").style.display = "flex";
+            document.body.style.overflow = "hidden";
+          } else {
+            alert("Error generating graph: " + (data.error || "Unknown error"));
+          }
+        }).fail(function() {
+          alert("Could not reach the server. Please try again.");
+        });
+      }
+
+      function closeGraphModal() {
+        document.getElementById("graphModal").style.display = "none";
+        document.body.style.overflow = "";
+      }
+
+      document.getElementById("graphModal").addEventListener("click", function(e) {
+        if (e.target === this) closeGraphModal();
+      });
+
+      // Auto-hide messages after 5 seconds
+      setTimeout(function() {
+        const messages = document.querySelectorAll('.message');
+        messages.forEach(message => {
+          message.style.display = 'none';
+        });
+      }, 5000); // 5000 milliseconds = 5 seconds
+    </script>
+  </body>
+</html>

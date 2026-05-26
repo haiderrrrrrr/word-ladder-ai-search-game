@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Select Difficulty</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/difficulty.css') }}"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <button class="back-btn" onclick="location.href='/game'">&#8592; Back</button>
+    <h1>Select Difficulty Level</h1>
+    <div class="button-container">
+      <button
+        class="button-27"
+        onclick="location.href='/game/choose_mode/beginner'"
+      >
+        <span class="material-icons">school</span> Beginner Mode
+      </button>
+      <button
+        class="button-27"
+        onclick="location.href='/game/choose_mode/advanced'"
+      >
+        <span class="material-icons">settings</span> Advanced Mode
+      </button>
+      <button
+        class="button-27"
+        onclick="location.href='/game/choose_mode/expert'"
+      >
+        <span class="material-icons">flash_on</span> Challenge Mode
+      </button>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Word Ladder Game</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/game.css') }}"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Add Material Icons -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <button class="back-btn" onclick="location.href='/'">&#8592; Home</button>
+    <div class="navigation">
+      <button class="button-27" onclick="location.href='/start_game'">
+        <span class="material-icons">play_arrow</span> Start Game
+      </button>
+      <button class="button-27" onclick="location.href='/about_us'">
+        <span class="material-icons">info</span> About Game
+      </button>
+      <button class="button-27" onclick="location.href='/game_rules'">
+        <span class="material-icons">rule</span> Game Rules
+      </button>
+    </div>
+  </body>
+</html>
